@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/theme.tsx","./src/todo.ts","./src/vite-env.d.ts","./src/components/providers/todoprovider.tsx","./src/components/screen/mainscreen.tsx","./src/components/ui/taskcard.tsx"],"version":"5.6.2"}
