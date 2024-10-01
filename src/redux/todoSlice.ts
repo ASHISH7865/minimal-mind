@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { nanoid } from 'nanoid';
 
-interface Todo {
+export interface Todo {
     id: string;
     title: string;
     status: 'COMPLETED' | 'NOT_COMPLETED';

@@ -1,5 +1,5 @@
-import { Todo } from "./components/providers/TodoProvider";
 import { nanoid } from 'nanoid';
+import { Todo } from './redux/todoSlice';
 
 const defaultTodos: Todo[] = [
   {
