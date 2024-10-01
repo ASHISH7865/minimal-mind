@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createTheme } from '@mui/material/styles';
 
 const baseTheme = {
@@ -50,7 +51,7 @@ const baseTheme = {
   },
 };
 
-const createCustomTheme = (options) => {
+const createCustomTheme = (options : any) => {
   const { palette, components } = options;
   return createTheme({
     ...baseTheme,
