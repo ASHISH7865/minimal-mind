@@ -1,25 +1,24 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createTheme } from '@mui/material/styles';
 
 const baseTheme = {
   typography: {
     fontFamily: 'JetBrains Mono, monospace',
     h4: {
-      fontSize: '2.75rem',
-      '@media (min-width:600px)': {
-        fontSize: '3rem',
-      },
-    },
-    body1: {
-      fontSize: '1.875rem',
+      fontSize: '1.75rem',
       '@media (min-width:600px)': {
         fontSize: '2rem',
       },
     },
-    body2: {
-      fontSize: '1.75rem',
+    body1: {
+      fontSize: '0.875rem',
       '@media (min-width:600px)': {
-        fontSize: '1.875rem',
+        fontSize: '1rem',
+      },
+    },
+    body2: {
+      fontSize: '0.75rem',
+      '@media (min-width:600px)': {
+        fontSize: '0.875rem',
       },
     },
   },
@@ -27,9 +26,9 @@ const baseTheme = {
     MuiButton: {
       styleOverrides: {
         root: {
-          fontSize: '1.75rem',
+          fontSize: '0.75rem',
           '@media (min-width:600px)': {
-            fontSize: '1.875rem',
+            fontSize: '0.875rem',
           },
           textTransform: 'none',
           borderRadius: 4,
@@ -40,9 +39,9 @@ const baseTheme = {
       styleOverrides: {
         root: {
           '& .MuiInputBase-root': {
-            fontSize: '1.875rem',
+            fontSize: '0.875rem',
             '@media (min-width:600px)': {
-              fontSize: '2rem',
+              fontSize: '1rem',
             },
           },
         },
@@ -51,6 +50,7 @@ const baseTheme = {
   },
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const createCustomTheme = (options : any) => {
   const { palette, components } = options;
   return createTheme({
