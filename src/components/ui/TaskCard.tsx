@@ -1,19 +1,14 @@
 import React, { useState, useCallback, memo } from 'react';
-import { Box, Checkbox, SxProps, Typography, TextField } from "@mui/material";
-import { Circle, CircleCheck } from "lucide-react";
-import { Todo, useTodo } from "../providers/TodoProvider";
-import theme from "../../theme";
+import { Box, Checkbox, Typography, TextField } from '@mui/material';
+import { Circle, CircleCheck } from 'lucide-react';
+import { useDispatch } from 'react-redux';
+import { toggleTodo, editTodo } from '../../redux/todoSlice';
 
-const titleStyle: SxProps = {
-    fontWeight: 600,
-    fontSize: theme.typography.body1.fontSize,
-};
 
-const TaskCard = memo(({ id, title, status }: Todo) => {
+const TaskCard = memo(({ id, title, status }: { id: string; title: string; status: 'COMPLETED' | 'NOT_COMPLETED' }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editedTitle, setEditedTitle] = useState(title);
-
-    const { toggleTodo, editTodo } = useTodo();
+    const dispatch = useDispatch();
 
     const handleTitleClick = useCallback(() => {
         setIsEditing(true);
@@ -26,9 +21,9 @@ const TaskCard = memo(({ id, title, status }: Todo) => {
     const handleTitleBlur = useCallback(() => {
         setIsEditing(false);
         if (editedTitle.trim() !== title) {
-            editTodo(id, editedTitle.trim());
+            dispatch(editTodo({ id, newTitle: editedTitle.trim() }));
         }
-    }, [editedTitle, title, id, editTodo]);
+    }, [editedTitle, title, id, dispatch]);
 
     const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
         if (event.key === 'Enter') {
@@ -37,8 +32,8 @@ const TaskCard = memo(({ id, title, status }: Todo) => {
     }, [handleTitleBlur]);
 
     const handleToggle = useCallback(() => {
-        toggleTodo(id);
-    }, [id, toggleTodo]);
+        dispatch(toggleTodo(id));
+    }, [id, dispatch]);
 
     return (
         <Box component="li" sx={{
@@ -49,12 +44,9 @@ const TaskCard = memo(({ id, title, status }: Todo) => {
             alignItems: 'center',
             padding: "1px",
             borderRadius: "5px",
-            ":hover": {
-                bgcolor: theme.palette.background.paper
-            }
         }}>
             <Checkbox
-            id={id}
+                id={id}
                 icon={<Circle size={14} />}
                 checkedIcon={<CircleCheck size={14} />}
                 checked={status === "COMPLETED"}
@@ -70,7 +62,9 @@ const TaskCard = memo(({ id, title, status }: Todo) => {
                         autoFocus
                         fullWidth
                         variant="standard"
-                        sx={titleStyle}
+                        sx={{
+                            fontWeight: 600,
+                        }}
                         InputProps={{
                             disableUnderline: true,
                         }}
@@ -78,7 +72,7 @@ const TaskCard = memo(({ id, title, status }: Todo) => {
                 ) : (
                     <Typography
                         sx={{
-                            ...titleStyle,
+                            fontWeight: 600,
                             textDecoration: status === "COMPLETED" ? "line-through" : "none",
                             color: status === "COMPLETED" ? "text.secondary" : "text.primary"
                         }}

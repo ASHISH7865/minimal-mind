@@ -1,7 +1,7 @@
 
 import { Container, SxProps, Typography } from '@mui/material'
 import './App.css'
-import MainScreen from './components/screen/MainScreen'
+import MainScreen from './components/screen/MainScreen/MainScreen'
 
 const BoxStyle: SxProps = {
     display: 'flex',
