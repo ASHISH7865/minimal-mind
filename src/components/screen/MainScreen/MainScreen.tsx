@@ -23,8 +23,15 @@ const MainScreen: React.FC = () => {
     const [bulkTodos, setBulkTodos] = useState('');
 
     useEffect(() => {
+        // Load todos from local storage on initial load
+        const storedTodos = localStorage.getItem('todos');
+        if (storedTodos) {
+            const parsedTodos = JSON.parse(storedTodos);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            parsedTodos.forEach((todo: any) => dispatch(addTodo(todo.title))); // Adjust as needed
+        }
         setInitialLoad(false);
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -39,6 +46,10 @@ const MainScreen: React.FC = () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
     }, [dispatch]);
+
+    useEffect(() => {
+        localStorage.setItem('todos', JSON.stringify(todos));
+    }, [todos]);
 
     const handleAddTodo = () => {
         if (isBulkMode) {
