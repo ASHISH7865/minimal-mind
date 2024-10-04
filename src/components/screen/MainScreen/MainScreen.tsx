@@ -102,12 +102,12 @@ const MainScreen: React.FC = () => {
                 handleAddTodo={handleAddTodo}
             />}
             <SettingsDrawer />
-            <TaskPriorityDrawer
+           {currentEditTask && <TaskPriorityDrawer
                 open={drawerOpen}
                 onClose={() => setDrawerOpen(false)}
                 task={currentEditTask}
 
-            />
+            />}
         </Box>
     );
 };
