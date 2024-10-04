@@ -14,7 +14,7 @@ interface ActionButtonsProps {
 
 }
 
-const ActionButtons: React.FC<ActionButtonsProps> = ({ clearCompleted, clearAll, hasCompletedTodos, hasTodos, toggleZenMode, isZenMode , handleSettingsOpen}) => (
+const ActionButtons: React.FC<ActionButtonsProps> = ({ clearCompleted, clearAll, hasCompletedTodos, hasTodos, toggleZenMode, isZenMode, handleSettingsOpen }) => (
     <Box
         component={motion.div}
         initial={{ opacity: 0, x: -20 }}
@@ -65,6 +65,8 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({ clearCompleted, clearAll,
         </Tooltip>
         <Tooltip title="Settings">
             <IconButton
+                color="secondary"
+                size="small"
                 onClick={handleSettingsOpen}
             >
                 <SettingsIcon size={20} />

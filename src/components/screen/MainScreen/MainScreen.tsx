@@ -3,32 +3,32 @@ import { Box, Divider } from '@mui/material';
 import { motion } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
-import { addTodo, addBulkTodo, clearCompleted, clearAll, toggleZenMode } from '../../../redux/todoSlice';
+import { addTodo, clearCompleted, clearAll, toggleZenMode, Todo } from '../../../redux/todoSlice';
 import Header from './Header';
 import Statistics from './Statistics';
 import ActionButtons from './ActionButtons';
 import TaskList from './TaskList';
 import TodoInput from './TodoInput';
 import SettingsDrawer from '../../ui/SettingModal';
+import TaskPriorityDrawer from '../../ui/TaskPriorityDrawer'; // Import the new drawer
 import { toggleSettingsModal } from '../../../redux/SettingSlice';
-
 
 const MainScreen: React.FC = () => {
     const dispatch = useDispatch();
     const todos = useSelector((state: RootState) => state.todos.todos);
     const isZenMode = useSelector((state: RootState) => state.todos.isZenMode);
-    const [newTodo, setNewTodo] = useState('');
+    const [newTodo, setNewTodo] = useState<Todo | null>(null);
     const [initialLoad, setInitialLoad] = useState(true);
-    const [isBulkMode, setIsBulkMode] = useState(false);
-    const [bulkTodos, setBulkTodos] = useState('');
+    const [drawerOpen, setDrawerOpen] = useState(false);
+    const [currentEditTask , setCurrentEditTask] = useState<Todo | null>(null);
 
     useEffect(() => {
-        // Load todos from local storage on initial load
         const storedTodos = localStorage.getItem('todos');
         if (storedTodos) {
-            const parsedTodos = JSON.parse(storedTodos);
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            parsedTodos.forEach((todo: any) => dispatch(addTodo(todo.title))); // Adjust as needed
+            const parsedTodos: Todo[] = JSON.parse(storedTodos);
+            parsedTodos.forEach(todo => {
+                dispatch(addTodo(todo));
+            });
         }
         setInitialLoad(false);
     }, [dispatch]);
@@ -52,19 +52,22 @@ const MainScreen: React.FC = () => {
     }, [todos]);
 
     const handleAddTodo = () => {
-        if (isBulkMode) {
-            const titles = bulkTodos.split('\n').filter(title => title.trim() !== '');
-            dispatch(addBulkTodo(titles));
-            setBulkTodos('');
-        } else {
+
+        if (newTodo) {
             dispatch(addTodo(newTodo));
-            setNewTodo('');
         }
+        setNewTodo(null); // This line resets the newTodo state
     };
 
     const hasCompletedTodos = todos.some(todo => todo.status === 'COMPLETED');
     const completedCount = todos.filter(todo => todo.status === 'COMPLETED').length;
     const pendingCount = todos.length - completedCount;
+
+    const handleEditTask = (id: string) => {
+       const currentTask = todos.find((todo) => todo.id === id);
+       if(currentTask) setCurrentEditTask(currentTask);
+        setDrawerOpen(true);
+    };
 
     return (
         <Box
@@ -92,18 +95,19 @@ const MainScreen: React.FC = () => {
                 handleSettingsOpen={() => dispatch(toggleSettingsModal())}
             />
             <Divider sx={{ width: '100%', mt: 2 }} />
-            <TaskList todos={todos} initialLoad={initialLoad} />
+            <TaskList todos={todos} initialLoad={initialLoad} onEditTask={handleEditTask} />
             {!isZenMode && <TodoInput
-                isBulkMode={isBulkMode}
-                bulkTodos={bulkTodos}
                 newTodo={newTodo}
-                setBulkTodos={setBulkTodos}
                 setNewTodo={setNewTodo}
                 handleAddTodo={handleAddTodo}
-                setIsBulkMode={setIsBulkMode}
             />}
-            {/* All Modals */}
             <SettingsDrawer />
+            <TaskPriorityDrawer
+                open={drawerOpen}
+                onClose={() => setDrawerOpen(false)}
+                task={currentEditTask}
+
+            />
         </Box>
     );
 };

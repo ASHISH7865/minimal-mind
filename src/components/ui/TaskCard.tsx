@@ -1,14 +1,20 @@
 import React, { useState, useCallback, memo } from 'react';
-import { Box, Checkbox, Typography, TextField } from '@mui/material';
-import { Circle, CircleCheck } from 'lucide-react';
+import { Box, Checkbox, Typography, TextField, useTheme, IconButton, Chip } from '@mui/material';
+import { Circle, CircleCheck, CircleEllipsis } from 'lucide-react';
 import { useDispatch } from 'react-redux';
-import { toggleTodo, editTodo } from '../../redux/todoSlice';
+import { toggleTodo, editTodo, Todo } from '../../redux/todoSlice';
 
+export const priorityColors = {
+    HIGH: "#F28B82",
+    MEDIUM: "#F7C774",
+    LOW: "#B7DDB1",
+};
 
-const TaskCard = memo(({ id, title, status }: { id: string; title: string; status: 'COMPLETED' | 'NOT_COMPLETED' }) => {
+const TaskCard = memo(({ task, onEditTask }: { task: Todo, onEditTask: (id: string) => void }) => {
     const [isEditing, setIsEditing] = useState(false);
-    const [editedTitle, setEditedTitle] = useState(title);
+    const [editedTitle, setEditedTitle] = useState(task?.title);
     const dispatch = useDispatch();
+    const theme = useTheme();
 
     const handleTitleClick = useCallback(() => {
         setIsEditing(true);
@@ -20,10 +26,10 @@ const TaskCard = memo(({ id, title, status }: { id: string; title: string; statu
 
     const handleTitleBlur = useCallback(() => {
         setIsEditing(false);
-        if (editedTitle.trim() !== title) {
-            dispatch(editTodo({ id, newTitle: editedTitle.trim() }));
+        if (editedTitle.trim() !== task?.title) {
+            dispatch(editTodo({ id: task?.id, newTitle: editedTitle.trim() }));
         }
-    }, [editedTitle, title, id, dispatch]);
+    }, [editedTitle, task?.title, task?.id, dispatch]);
 
     const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
         if (event.key === 'Enter') {
@@ -32,8 +38,13 @@ const TaskCard = memo(({ id, title, status }: { id: string; title: string; statu
     }, [handleTitleBlur]);
 
     const handleToggle = useCallback(() => {
-        dispatch(toggleTodo(id));
-    }, [id, dispatch]);
+        dispatch(toggleTodo(task?.id));
+    }, [task?.id, dispatch]);
+
+    const handleEditClick = () => {
+        onEditTask(task?.id);
+    };
+
 
     return (
         <Box component="li" sx={{
@@ -44,12 +55,13 @@ const TaskCard = memo(({ id, title, status }: { id: string; title: string; statu
             alignItems: 'center',
             padding: "1px",
             borderRadius: "5px",
+            backgroundColor: `${theme.palette.background.paper}80`,
         }}>
             <Checkbox
-                id={id}
-                icon={<Circle size={14} />}
-                checkedIcon={<CircleCheck size={14} />}
-                checked={status === "COMPLETED"}
+                id={task?.id}
+                icon={<Circle size={20} />}
+                checkedIcon={<CircleCheck size={20} />}
+                checked={task?.status === "COMPLETED"}
                 onChange={handleToggle}
             />
             <Box component="div" sx={{ flexGrow: 2 }}>
@@ -73,15 +85,34 @@ const TaskCard = memo(({ id, title, status }: { id: string; title: string; statu
                     <Typography
                         sx={{
                             fontWeight: 600,
-                            textDecoration: status === "COMPLETED" ? "line-through" : "none",
-                            color: status === "COMPLETED" ? "text.secondary" : "text.primary"
+                            textDecoration: task?.status === "COMPLETED" ? "line-through" : "none",
+                            color: task?.status === "COMPLETED" ? "text.secondary" : "text.primary"
                         }}
                         onDoubleClick={handleTitleClick}
                     >
-                        {title}
+                        {task?.title}
                     </Typography>
                 )}
+
             </Box>
+            {task?.priority && <Chip
+                size='small'
+                variant='filled'
+                label={task?.priority}
+                sx={{
+                    backgroundColor: priorityColors[task.priority],
+                    color: theme.palette.getContrastText(priorityColors[task.priority]),
+                    fontSize: '0.5rem',
+                    fontWeight: "bold",
+                }}
+            />}
+            <IconButton
+                size="small"
+                color="secondary"
+                onClick={handleEditClick}
+            >
+                <CircleEllipsis />
+            </IconButton>
         </Box>
     );
 });

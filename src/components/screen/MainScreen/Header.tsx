@@ -12,7 +12,7 @@ const Header: React.FC = () => (
             transition={{ delay: 0.2, duration: 0.5 }}
         >
             <Typography variant="h4" component="h1">
-                Minimal Mind
+                EasyTodo
             </Typography>
         </Box>
         <Box
@@ -21,7 +21,7 @@ const Header: React.FC = () => (
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.5 }}
         >
-            <Typography variant="body2" component="p" color="secondary">Minimal Input, Maximum Output</Typography>
+            <Typography variant="body2" component="p" color="secondary">Productivity at peak</Typography>
         </Box>
     </Box>
 );

@@ -1,20 +1,18 @@
 // src/components/ui/TodoInput.tsx
 import React from "react";
-import { Box, TextField, Typography } from "@mui/material";
+import { Box, Divider, TextField} from "@mui/material";
 import { motion } from "framer-motion";
+import { Todo } from "../../../redux/todoSlice";
+import { nanoid } from "nanoid";
 
 interface TodoInputProps {
-    isBulkMode: boolean;
-    bulkTodos: string;
-    newTodo: string;
-    setBulkTodos: (value: string) => void;
-    setNewTodo: (value: string) => void;
+    newTodo: Todo | null;
+    setNewTodo: (value: Todo | null) => void; // Updated type to allow null
     handleAddTodo: () => void;
-    setIsBulkMode: (value: boolean) => void;
 }
 
 const TodoInput: React.FC<TodoInputProps> = ({
-    isBulkMode, bulkTodos, newTodo, setBulkTodos, setNewTodo, handleAddTodo, setIsBulkMode
+     newTodo, setNewTodo, handleAddTodo
 }) => (
     <Box
         component={motion.div}
@@ -26,40 +24,30 @@ const TodoInput: React.FC<TodoInputProps> = ({
             width: '100%',
         }}
     >
-        <Box sx={{ position: 'relative', mb: 2, mx: 1, width: '100%' }}>
-            <Typography
-                variant="caption"
-                sx={{
-                    position: '',
-                    right: 0,
-                    bottom: -20,
-                    color: 'text.secondary',
-                    fontSize: '0.7rem',
-                }}
-            >
-                {isBulkMode ? 'Bulk Mode' : 'Single Mode'} (Shift+Tab to switch)
-            </Typography>
-            <TextField
-                fullWidth
-                multiline={isBulkMode}
-                rows={isBulkMode ? 4 : 1}
-                value={isBulkMode ? bulkTodos : newTodo}
-                onChange={(e) => isBulkMode ? setBulkTodos(e.target.value) : setNewTodo(e.target.value)}
-                onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        handleAddTodo();
-                    } else if (e.key === 'Tab' && e.shiftKey) {
-                        e.preventDefault();
-                        setIsBulkMode(!isBulkMode);
-                    }
-                }}
-                placeholder={isBulkMode ? "Enter multiple tasks, one per line" : "+ Add task & press enter"}
-                variant="standard"
-                InputProps={{
-                    disableUnderline: true,
-                }}
-            />
+        <Divider sx={{ borderStyle: 'dashed' }} />
+        <Box sx={{ position: 'relative', my: 2, mx: 1, width: '100%' }}>
+
+            <Box sx={{ display: "flex", alignItems: "flex-start" }}>
+                <TextField
+                    fullWidth
+                    value={newTodo?.title || ''}
+                    onChange={(e) => setNewTodo({ id: nanoid(), title: e.target.value, status: "NOT_COMPLETED", priority: "LOW", tags: [] })} // Update the title only
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            handleAddTodo();
+                            setNewTodo(null as Todo | null);
+                        } else if (e.key === 'Tab') {
+                            e.preventDefault();
+                        }
+                    }}
+                    placeholder={"+ Add task & press enter"}
+                    variant="standard"
+                    InputProps={{
+                        disableUnderline: true,
+                    }}
+                />
+            </Box>
         </Box>
     </Box>
 );
