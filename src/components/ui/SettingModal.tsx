@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Card, CardActionArea, CardContent, Divider, Typography, Drawer, Radio } from '@mui/material';
+import { Box, Card, CardActionArea, CardContent, Divider, Typography, Drawer, Radio, useTheme } from '@mui/material';
 import { useThemeContext } from '../../contexts/ThemeContext';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../redux/store';
@@ -19,6 +19,7 @@ const SettingModal: React.FC = () => {
     const dispatch = useDispatch();
     const isSettingsOpen = useSelector((state: RootState) => state.settings.isSettingsOpen);
     const currentTheme = useSelector((state: RootState) => state.settings.theme);
+    const theme = useTheme();
 
     const handleClose = () => {
         dispatch(toggleSettingsModal());
@@ -31,7 +32,11 @@ const SettingModal: React.FC = () => {
 
 
     return (
-        <Drawer anchor="right" open={isSettingsOpen} onClose={handleClose}>
+        <Drawer variant='temporary' PaperProps={{
+            sx:{
+                background : theme.palette.background.paper
+            }
+        }}  anchor="right" open={isSettingsOpen} onClose={handleClose}>
             <Box sx={{ width: 300, p: 2 }}>
                 <Box >
                     <Typography variant="h6" component="div">General</Typography>

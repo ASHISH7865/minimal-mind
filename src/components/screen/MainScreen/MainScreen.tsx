@@ -96,11 +96,11 @@ const MainScreen: React.FC = () => {
             />
             <Divider sx={{ width: '100%', mt: 2 }} />
             <TaskList todos={todos} initialLoad={initialLoad} onEditTask={handleEditTask} />
-            {!isZenMode && <TodoInput
+             <TodoInput
                 newTodo={newTodo}
                 setNewTodo={setNewTodo}
                 handleAddTodo={handleAddTodo}
-            />}
+            />
             <SettingsDrawer />
            {currentEditTask && <TaskPriorityDrawer
                 open={drawerOpen}

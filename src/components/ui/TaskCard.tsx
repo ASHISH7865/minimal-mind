@@ -100,9 +100,7 @@ const TaskCard = memo(({ task, onEditTask }: { task: Todo, onEditTask: (id: stri
                 variant='filled'
                 label={task?.priority}
                 sx={{
-                    backgroundColor: priorityColors[task.priority],
-                    color: theme.palette.getContrastText(priorityColors[task.priority]),
-                    fontSize: '0.5rem',
+                    backgroundColor: theme.palette.background.paper,
                     fontWeight: "bold",
                 }}
             />}
